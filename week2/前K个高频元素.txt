@@ -1,0 +1,37 @@
+class Solution {
+
+public:
+    //通过出现次数排序
+    static bool cmp(pair<int, int>& m, pair<int, int>& n) 
+    {
+        return m.second > n.second;
+    }
+
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int, int> occurrences;
+        for (auto& v : nums) {
+            occurrences[v]++;
+        }
+
+        // 用优先队列进行排序，做出小顶堆
+        // pair 的第一个元素代表数组的值，第二个元素代表了该值出现的次数
+        priority_queue<pair<int, int>, vector<pair<int, int>>, decltype(&cmp)> q(cmp);
+		for (auto& targetPair : occurrences) {
+			if (q.size() == k) {
+				if (q.top().second < targetPair.second) {
+					q.pop();
+					q.emplace(targetPair.first, targetPair.second);
+				}
+			}
+			else {
+				q.emplace(targetPair.first, targetPair.second);
+			}
+		}
+        vector<int> ret;
+        while (!q.empty()) {
+            ret.emplace_back(q.top().first);
+            q.pop();
+        }
+        return ret;
+    }
+};

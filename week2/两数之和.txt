@@ -1,0 +1,21 @@
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) 
+    {
+        // 1. 建立哈希表来存储遍历过的数，value作为map的key，index作为map的value
+        // 2. 遍历nums，看target-nums[i]是否在map内，有的话直接return；不在则将nums[i]加入到map里
+        unordered_map<int,int> _map;
+        
+        for(int i=0;i<nums.size();++i)
+        {
+            if(_map.count(target-nums[i]))
+            {
+                return {_map[target-nums[i]],i};
+            }
+
+            _map[nums[i]] = i;
+        }
+
+        return {};
+    }
+};
