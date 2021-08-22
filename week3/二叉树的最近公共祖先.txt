@@ -1,0 +1,28 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    //DFS,时间复杂度O(n),空间复杂度O(n)
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        //终止条件：找到p或者q时，或者为空时，找到p或q返回root相当于一个标记
+        if(root == nullptr || root == p || root == q) return root;
+        //后序遍历，先找到p，q，然后再回溯，left和right相当于一个标记，如果不为nullptr即有p或者q，如果left和right同时不为nullptr，则就找到最近公共祖先
+        TreeNode* left = lowestCommonAncestor(root->left,p,q);
+        TreeNode* right = lowestCommonAncestor(root->right,p,q);
+        //left和right都为nullptr，意味着p和q不在下面，直接返回nullptr
+        if(left == nullptr && right == nullptr) return nullptr;
+        //left == nullptr，此时right就是最近公共祖先
+        if(left == nullptr) return right;
+        //right == nullptr，此时right就是最近公共祖先
+        if(right == nullptr) return left;
+        //left和right同时不为nullptr，root就是最近公共祖先
+        return root;
+    }
+};

@@ -1,0 +1,30 @@
+class Solution {
+    void dfs(int n,int k,int curVal, vector<int>& path, vector<vector<int>>& res)
+    {
+        if(path.size() == k)
+        {
+            res.push_back(path);
+            return;
+        }
+
+        //所有组合里面元素不重复，res不会存不同顺序的相同数字,所以只需要执行到 n - (k - path.size()) + 1 的位置就是最大的位置（剪枝）
+        for(int i = curVal; i <= n - (k - path.size()) + 1; ++i)
+        {
+            path.push_back(i);
+            dfs(n,k,i+1,path,res);
+            path.pop_back();
+        }
+    }
+    
+
+public:
+	vector<vector<int>> combine(int n, int k) {
+        vector<vector<int>> res;
+        if(k<=0 || n<k)
+            return res;
+
+        vector<int> path;
+        dfs(n,k,1,path,res);
+        return res;
+	}
+};

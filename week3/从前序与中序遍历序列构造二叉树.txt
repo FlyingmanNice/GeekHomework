@@ -1,0 +1,46 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+private:
+    unordered_map<int,int> m_mInorderIndex;
+
+    TreeNode* myBuildTree(vector<int>& preorder,vector<int>& inorder, int preorder_start,int preorder_end,int inorder_start,int inorder_end)
+    {
+        //terminator
+        if(preorder_start > preorder_end)
+            return nullptr;
+
+        // 1. 通过preorder获得root，并实例化TreeNode
+        // 2. 根据root在inorder中获得root的左右子树范围
+        // 3. root->left为root的左子树范围内的myBuildTree, root->right为右子树范围内的myBuildTree
+        // 4. 最后返回root
+
+        TreeNode* _root = new TreeNode(preorder[preorder_start]);
+        int _nRootInorderIndex =  m_mInorderIndex[_root->val];
+
+        _root->left = myBuildTree(preorder,inorder,preorder_start + 1, preorder_start + _nRootInorderIndex - inorder_start, inorder_start,_nRootInorderIndex - 1);
+        _root->right = myBuildTree(preorder,inorder,preorder_start + _nRootInorderIndex - inorder_start + 1, preorder_end, _nRootInorderIndex + 1, inorder_end);
+
+        return _root;
+    }
+public:
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        int n = inorder.size();
+        //因为元素不重复，所以先用map存起val对应的index便于获取
+        for(int i = 0; i<n;++i)
+        {
+            m_mInorderIndex[inorder[i]] = i;
+        }
+
+        return myBuildTree(preorder,inorder,0,n-1,0,n-1);
+    }
+};
